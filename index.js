@@ -21,7 +21,7 @@ class CameraViewScreen extends PureComponent {
                 return { uri, height, width, base64 };
             });
 
-            console.log("data uri (essentially path)", data.uri);
+            console.log("DATA URI", data.uri);
             console.log("BASE 64 LENGTH", data['base64'].length);
             this.storePicture(data);
         }
@@ -38,7 +38,7 @@ class CameraViewScreen extends PureComponent {
 
             // console.log(data['base64'])
             let body = JSON.stringify({
-                "name": "tester5jkgrdf.jpg",
+                "name": "testing.jpg",
                 "file": data['base64']
             });
 
@@ -50,7 +50,6 @@ class CameraViewScreen extends PureComponent {
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json;',
-                    //  'Authorization': 'Bearer ' + 'SECRET_OAUTH2_TOKEN_IF_AUTH',
                 },
                 body: body,
             }
@@ -71,7 +70,6 @@ class CameraViewScreen extends PureComponent {
             this.props.navigation.navigate('Results', {
                 responseJson: responseJson
             });
-            // this.props.navigation.navigate('Results');
         }
     }
 
@@ -80,7 +78,6 @@ class CameraViewScreen extends PureComponent {
         return (
 
             <View style={styles.container}>
-                {/* <Text>hello</Text> */}
                 <RNCamera
                     ref={ref => {
                         this.camera = ref;
@@ -100,11 +97,9 @@ class CameraViewScreen extends PureComponent {
                 <View style={{ flex: 0, flexDirection: 'row', justifyContent: 'center' }}>
                     <TouchableOpacity onPress={this.state.loading ? null : this.takePicture.bind(this)} style={styles.capture}
                         accessibilityLabel="Take Photo|hf_make_clickable">
-                        <Text style={{ fontSize: 14 }}>{this.state.loading ? "Loading..." : "TAKE PHOTO"}  </Text>
+                        <Text style={{ fontSize: 14 }}>{this.state.loading ? "LOADING..." : "TAKE PHOTO"}  </Text>
                     </TouchableOpacity>
                 </View>
-                {/* <View> */}
-                {/* </View> */}
             </View>
         )
     }
@@ -117,44 +112,26 @@ class ResultsScreen extends PureComponent {
         console.log(this.props.route.params.responseJson['result']);
 
         return (
-            <SafeAreaView>
-                {/* <TouchableOpacity disabled={!isCameraReady} onPress={switchCamera}> */}
-                <Image style={styles.logo} source={{ uri: `data:image/png;base64,${this.props.route.params.responseJson['file']}` }} />
-                <Text>${this.props.route.params.responseJson['message']}</Text>
-                <Text>{JSON.stringify(this.props.route.params.responseJson['result']).replace("{", "").replace("}", "")}</Text>
+            <SafeAreaView style={styles.container2}>
+                <Image style={styles.picture} source={{ uri: `data:image/png;base64,${this.props.route.params.responseJson['file']}` }} />
+                <Text style={styles.message1}>{this.props.route.params.responseJson['message'].toUpperCase()}</Text>
+                <Text style={styles.message2}>{JSON.stringify(this.props.route.params.responseJson['result']).replace("{", "").replace("}", "")}</Text>
                 {/* {Object.keys(this.props.route.params.responseJson['result']).map((key, index) => {
                     return (
                         <Text key={index}>${key}</Text>
                     )
                 })} */}
-                {/* <TouchableOpacity accessibilityLabel="Go Back|hf_make_clickable" onPress={this.props.navigation.goBack()}>
-                    <View style={[styles.closeCross, { transform: [{ rotate: "45deg" }] }]} />
-
-                    <View
-                        style={[styles.closeCross, { transform: [{ rotate: "-45deg" }] }]}
-                     /> 
-                </TouchableOpacity> */}
             </SafeAreaView>
         )
     }
 }
-
-// export default function ReviewDetails({ navigation }) {
-//     return (
-//         <View style={globalStyles.container}>
-//             <Text>{navigation.getParam('title')}</Text>
-//             <Text>{navigation.getParam('body')}</Text>
-//             <Text>{navigation.getParam('rating')}</Text>
-//         </View>
-//     )
-// }
 
 class ExampleApp extends PureComponent {
     render() {
         return (
             <NavigationContainer>
                 <Stack.Navigator>
-                    <Stack.Screen name="Home" component={CameraViewScreen} />
+                    <Stack.Screen name="PwC RealWear Object Detection" component={CameraViewScreen} />
                     <Stack.Screen name="Results" component={ResultsScreen} options={{
                         headerBackAccessibilityLabel: "Go Back|hf_make_clickable"
                     }} />
@@ -162,29 +139,6 @@ class ExampleApp extends PureComponent {
             </NavigationContainer>
         );
     }
-
-
-
-    // renderResponse = (responseJson) => {
-    //     // const base64Image = responseJson['file'];
-    //     const base64Image = responseJson;
-    //     return (
-    //         <SafeAreaView>
-    //             {/* <TouchableOpacity disabled={!isCameraReady} onPress={switchCamera}> */}
-    //             <Image source={{ uri: `data:image/png;base64,${base64Image}` }} />
-    //             {/* { renderCancelPreviewButton2()} */}
-    //             <TouchableOpacity accessibilityLabel="Go Back|hf_make_clickable">
-    //                 <View style={[styles.closeCross, { transform: [{ rotate: "45deg" }] }]} />
-
-    //                 <View
-    //                     style={[styles.closeCross, { transform: [{ rotate: "-45deg" }] }]}
-    //                 />
-    //             </TouchableOpacity>
-    //         </SafeAreaView>
-    //     )
-    // }
-
-
 }
 
 const styles = StyleSheet.create({
@@ -192,6 +146,13 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
         backgroundColor: 'black',
+    },
+    container2: {
+        // flex: 1,
+        // flexDirection: 'column',
+        // backgroundColor: 'blue',
+        justifyContent: 'center',
+        alignContent: 'center'
     },
     preview: {
         flex: 1,
@@ -211,14 +172,31 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         margin: 20,
     },
-    logo: {
-        width: 296,
-        height: 258,
+    picture: {
+        width: 396,
+        height: 297,
+        alignSelf: 'center'
+        // left: 30,
+        // top: 30,
         // width: Dimensions.get('window').width,
         // flex: 1,
         // resizeMode: 'cover', // or 'stretch',
         // justifyContent: 'center',
+        // alignContent: 'center',
     },
+    message1: {
+        fontWeight: "bold",
+        marginVertical: 4,
+        textAlign: 'center'
+    },
+    message2: {
+        color: "black",
+        textDecorationColor: "yellow",
+        textShadowColor: "red",
+        textShadowRadius: 1,
+        margin: 24,
+        textAlign: 'center'
+    }
 });
 
 AppRegistry.registerComponent(appName, () => ExampleApp);
